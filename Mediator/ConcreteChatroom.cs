@@ -1,26 +1,25 @@
 ﻿using MediatorPattern.Interfaces;
 using MediatorPattern.Models;
 
-namespace MediatorPattern.Mediator
+namespace MediatorPattern.Mediator;
+
+// Concrete Mediator
+class ConcreteChatroom : IChatroom
 {
-    // Concrete Mediator
-    class ConcreteChatroom : IChatroom
+    private Dictionary<string, Participant> participants = new Dictionary<string, Participant>();
+
+    public void Register(Participant participant)
     {
-        private Dictionary<string, Participant> participants = new Dictionary<string, Participant>();
+        participants[participant.Name] = participant;
+    }
 
-        public void Register(Participant participant)
+    public void SendMessage(string message, Participant sender)
+    {
+        foreach (var participant in participants.Values)
         {
-            participants[participant.Name] = participant;
-        }
-
-        public void SendMessage(string message, Participant sender)
-        {
-            foreach (var participant in participants.Values)
+            if (participant != sender)
             {
-                if (participant != sender)
-                {
-                    participant.Receive(message);
-                }
+                participant.Receive(message);
             }
         }
     }
